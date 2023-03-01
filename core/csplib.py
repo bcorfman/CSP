@@ -5,15 +5,19 @@ from .util import PriorityQueue
 
 
 class Problem:
-    def __init__(self, variables: list[str], domains: dict, constraints: list[str]):
+    def __init__(self, variables: list[str], domains: dict, neighbors: dict,
+                 constraints: list[str]):
         self.variables = variables
         self.domains = PriorityQueue()
-        for k, v in domains.items:
-            self.domains.push((k, v), len(v))
+        for k, _ in neighbors:
+            num_vals = len(domains[k])
+            self.domains.push((k, domains[k]), num_vals)
+        self.neighbors = neighbors
         self.constraints = constraints
 
     def __repr__(self) -> str:
-        return f'Problem({self.variables}, {self.domains}, {self.constraints})'
+        return f'''Problem({self.variables}, {self.domains}, {self.neighbors},
+                {self.constraints})'''
 
     def goal(self, assignment) -> bool:
         return len(assignment) == len(self.variables)
