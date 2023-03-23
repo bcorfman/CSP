@@ -8,10 +8,11 @@ class Problem:
     def __init__(self, variables: list[str], domains: dict, neighbors: dict,
                  constraints: list[str]):
         self.variables = variables
-        self.domains = PriorityQueue()
-        for k, _ in neighbors:
+        self.domains = domains
+        self.domain_queue = PriorityQueue()
+        for k in neighbors.keys():
             num_vals = len(domains[k])
-            self.domains.push((k, domains[k]), num_vals)
+            self.domain_queue.push((k, domains[k]), num_vals)
         self.neighbors = neighbors
         self.constraints = constraints
 
@@ -25,15 +26,15 @@ class Problem:
 
 # algorithms for selecting unassigned variables
 def next_choice(assignment: dict, problem: Problem):
-    return (problem.variables - set(assignment)).pop()
+    return (set(problem.variables) - set(assignment.keys())).pop()
 
 
 def random_choice(assignment: dict, problem: Problem):
-    return random.choice(problem.variables - set(assignment))
+    return random.choice(set(problem.variables) - set(assignment))
 
 
 def minimum_remaining_values(assignment: dict, problem: Problem):
-    remaining = problem.variables - set(assignment)
+    remaining = set(problem.variables) - set(assignment)
     ctr = Counter()
     for var in remaining:
         new_assignment = dict(assignment)
